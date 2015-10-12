@@ -1,0 +1,25 @@
+clear all;
+clc;
+
+Vave=7;
+wbl_k=2;
+wbl_c=Vave/(gamma(1+1/wbl_k));
+year=365;
+% wbl_c=6.95;
+
+excel_file='E:\WD93-HT45.3A_V3-H80B2\spc.xls';
+sheet_name='Sheet1';
+data_range='A5:B175';
+
+%=============================definition===================================
+power_curve=xlsread(excel_file,sheet_name, data_range);
+ws=power_curve(:,1);
+power=power_curve(:,2); %kW
+
+sum_power=zeros(1,length(power));
+
+for i=1:length(ws)
+    sum_power(i)=power(i)*wblpdf(ws(i),wbl_c,wbl_k);
+end
+aey=trapz(ws,sum_power)*24*year;%kWh
+disp(aey)
